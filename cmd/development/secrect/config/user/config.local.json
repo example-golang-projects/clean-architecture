@@ -1,0 +1,17 @@
+{
+  "service_name": "User service",
+  "database": {
+    "master_db": {
+      "protocol":"localhost",
+      "host":"localhost",
+      "port":5432,
+      "username":"postgres",
+      "password":"postgres",
+      "database":"postgres",
+      "sslmode": "disable",
+      "timeout": 15
+    },
+    "user_db": {}
+  },
+  "master_service_addr": ""
+}
