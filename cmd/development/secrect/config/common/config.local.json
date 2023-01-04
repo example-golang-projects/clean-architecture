@@ -1,8 +1,0 @@
-{
-  "common": {
-    "project_name": "Example project",
-    "organization_name": "Example Organization Name",
-    "image_url": "imageURL.com",
-    "environment": 1
-  }
-}

@@ -2,7 +2,10 @@ package main
 
 import (
 	"context"
-	"fmt"
+	masterCfg "github.com/example-golang-projects/clean-architecture/cmd/server/master/config"
+	"github.com/example-golang-projects/clean-architecture/cmd/server/user"
+	userCfg "github.com/example-golang-projects/clean-architecture/cmd/server/user/config"
+	"github.com/example-golang-projects/clean-architecture/golibs/config"
 	"github.com/spf13/cobra"
 	"os"
 )
@@ -25,18 +28,25 @@ func makeRootCmd() {
 		Long:  `User is internal back-end to manage user, role, permission domains)`,
 		Args:  cobra.MinimumNArgs(0),
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("test user na")
-			// Set config here
+			userConfig := userCfg.Config{}
+			err := config.MustLoad(config.FileType_JSON, "./cmd/development/secret/config/user/config.local.json", &userConfig)
+			if err != nil {
+				panic(err)
+			}
+			user.RunUserService(userConfig)
 		},
 	}
 	masterCmd := &cobra.Command{
 		Use:   "master",
 		Short: "Start Master server",
-		Long:  `User is internal back-end to manage master data`,
+		Long:  `User is internal back-end to manage master data (import, export data which hardly change)`,
 		Args:  cobra.MinimumNArgs(0),
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("test master na")
-			// Set config here
+			masterCfg := &masterCfg.Config{}
+			err := config.MustLoad(config.FileType_JSON, "./cmd/development/secret/config/master/config.local.json", masterCfg)
+			if err != nil {
+				panic(err)
+			}
 		},
 	}
 

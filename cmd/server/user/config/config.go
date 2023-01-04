@@ -17,6 +17,7 @@ type Config struct {
 	Common CommonConfig `json:"common"`
 
 	ServiceName     string   `json:"service_name"`
+	ServicePort     string   `json:"service_port"`
 	Database        DBConfig `json:"database"`
 	UserServiceAddr string   `json:"user_service_addr"`
 }
