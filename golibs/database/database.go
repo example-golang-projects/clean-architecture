@@ -1,10 +1,7 @@
 package database
 
 import (
-	"context"
-	"fmt"
-	"github.com/example-golang-projects/clean-architecture/core/config"
-	"github.com/jackc/pgx/v5"
+	"database/sql"
 	"log"
 	"os"
 	"time"
@@ -13,17 +10,15 @@ import (
 )
 
 type Database struct {
-	Conn *pgx.Conn
+	db *sql.DB
 }
 
-func NewDatabase(d config.Config) *Database {
-	c := d.Databases.PostgresDB
-	connString := fmt.Sprintf("dbname=%v user=%v password=%v host=%v port=%v sslmode=%v", c.Database, c.Username, c.Password, c.Host, c.Port, c.SSLMode)
-	conn, err := pgx.Connect(context.Background(), connString)
+func NewDatabase(connStr string) (*sql.DB, error) {
+	db, err := sql.Open("postgres", connStr)
 	if err != nil {
-		log.Panic(err, nil, nil)
+		return nil, err
 	}
-	return &Database{Conn: conn}
+	return db, nil
 }
 
 func newLogger() logger.Interface {

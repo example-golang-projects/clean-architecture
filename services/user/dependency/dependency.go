@@ -1,25 +1,36 @@
 package dependency
 
 import (
+	"database/sql"
+	"fmt"
 	"github.com/example-golang-projects/clean-architecture/cmd/server/user/config"
-	"github.com/jackc/pgx/v5"
+	"github.com/example-golang-projects/clean-architecture/golibs/database"
+	"github.com/example-golang-projects/clean-architecture/golibs/database/migration"
+	"log"
 )
 
 type UserDependency struct {
 	Config config.Config
-	DB     *pgx.Conn
+	DB     *sql.DB
 
 	// List of client/third-party
 }
 
 func InitUserDependency(cfg config.Config) UserDependency {
-	// Init database
-	// ...
-	// Init client/third-party
-	// ...
+	connStr := fmt.Sprintf("dbname=%v user=%v password=%v host=%v port=%v sslmode=%v", cfg.Database.UserDB.Database, cfg.Database.UserDB.Username, cfg.Database.UserDB.Password, cfg.Database.UserDB.Host, cfg.Database.UserDB.Port, cfg.Database.UserDB.SSLMode)
+
+	db, err := database.NewDatabase(connStr)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	err = migration.Up(db, "./services/user/migrations", cfg.ServiceName)
+	if err != nil {
+		log.Panic(err)
+	}
 
 	return UserDependency{
 		Config: cfg,
-		DB:     nil,
+		DB:     db,
 	}
 }

@@ -1,10 +1,9 @@
-package paging
+package pagination
 
 import (
 	"errors"
 	"fmt"
 	arraycommom "github.com/example-golang-projects/clean-architecture/golibs/common/cm_array"
-	errorpkg "github.com/example-golang-projects/clean-architecture/golibs/error"
 	"reflect"
 	"strings"
 )
@@ -35,13 +34,13 @@ func (p *Paging) Validate(model interface{}) error {
 			lowerSort := strings.ToLower(sort)             // created_at desc
 			lowerSortStrs := strings.Split(lowerSort, " ") // ["created_at", "desc"]
 			if len(lowerSortStrs) != 2 {
-				return errorpkg.ErrInternal(errors.New(fmt.Sprintf("Sort does not valid")))
+				return errors.New(fmt.Sprintf("Sort does not valid"))
 			}
 			sortField := lowerSortStrs[0]                             // "created_at"
 			normalizedField := strings.ReplaceAll(sortField, "_", "") // createdat
 			isContained := arraycommom.ListStringsContain(normalizedColumns, normalizedField)
 			if !isContained {
-				return errorpkg.ErrInternal(errors.New(fmt.Sprintf("Sorted field %v does not exist in table", normalizedField)))
+				return errors.New(fmt.Sprintf("Sorted field %v does not exist in table", normalizedField))
 			}
 		}
 	}

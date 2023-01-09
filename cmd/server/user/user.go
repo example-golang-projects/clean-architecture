@@ -5,6 +5,7 @@ import (
 	"github.com/example-golang-projects/clean-architecture/cmd/server/user/config"
 	"github.com/example-golang-projects/clean-architecture/services/user/dependency"
 	"github.com/example-golang-projects/clean-architecture/services/user/modules/role/handler"
+	"log"
 	"net/http"
 )
 
@@ -28,5 +29,10 @@ func RunUserService(cfg config.Config) {
 		Addr:    fmt.Sprintf(":%s", cfg.ServicePort),
 		Handler: NewUserService(cfg),
 	}
-	server.ListenAndServe()
+	err := server.ListenAndServe()
+	switch err {
+	case nil, http.ErrServerClosed:
+	default:
+		log.Fatal(err, nil, nil)
+	}
 }
