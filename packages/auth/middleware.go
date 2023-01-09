@@ -4,16 +4,16 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	errorpkg "github.com/example-golang-projects/clean-architecture/golibs/error"
+	errorpkg "github.com/example-golang-projects/clean-architecture/packages/error"
 	"net/http"
 	"strings"
 
 	"github.com/example-golang-projects/clean-architecture/core/config"
-	"github.com/example-golang-projects/clean-architecture/golibs/env"
+	"github.com/example-golang-projects/clean-architecture/packages/env"
 
-	"github.com/example-golang-projects/clean-architecture/golibs/http"
+	"github.com/example-golang-projects/clean-architecture/packages/http"
 
-	"github.com/example-golang-projects/clean-architecture/golibs/authorize/auth"
+	"github.com/example-golang-projects/clean-architecture/packages/authorize/auth"
 )
 
 func CORS(next http.Handler) http.HandlerFunc {

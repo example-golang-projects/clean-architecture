@@ -3,7 +3,7 @@ package httppkg
 import (
 	"context"
 	"encoding/json"
-	errorpkg "github.com/example-golang-projects/clean-architecture/golibs/error"
+	errorpkg "github.com/example-golang-projects/clean-architecture/packages/error"
 	"io"
 	"net/http"
 	"strconv"

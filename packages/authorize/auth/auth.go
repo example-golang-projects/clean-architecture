@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/casbin/casbin/v2/model"
-	"github.com/example-golang-projects/clean-architecture/golibs/authorize/adapter"
+	"github.com/example-golang-projects/clean-architecture/packages/authorize/adapter"
 
 	"github.com/casbin/casbin/v2"
 )

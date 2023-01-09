@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/example-golang-projects/clean-architecture/golibs/error"
+	"github.com/example-golang-projects/clean-architecture/packages/error"
 
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"

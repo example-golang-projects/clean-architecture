@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/example-golang-projects/clean-architecture/cmd/server/user/config"
-	"github.com/example-golang-projects/clean-architecture/golibs/database"
-	"github.com/example-golang-projects/clean-architecture/golibs/database/migration"
+	"github.com/example-golang-projects/clean-architecture/packages/database"
+	"github.com/example-golang-projects/clean-architecture/packages/database/migration"
 	"log"
 )
 

@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	testingpkg "github.com/example-golang-projects/clean-architecture/golibs/testing"
+	testingpkg "github.com/example-golang-projects/clean-architecture/packages/testing"
 
 	"github.com/stretchr/testify/assert"
 )

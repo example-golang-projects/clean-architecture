@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/example-golang-projects/clean-architecture/golibs/error"
-	"github.com/example-golang-projects/clean-architecture/golibs/id"
+	"github.com/example-golang-projects/clean-architecture/packages/error"
+	"github.com/example-golang-projects/clean-architecture/packages/id"
 
 	"github.com/dgrijalva/jwt-go"
 )

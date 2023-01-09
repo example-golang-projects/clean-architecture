@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/example-golang-projects/clean-architecture/cmd/server/master/config"
-	"github.com/example-golang-projects/clean-architecture/golibs/database"
-	"github.com/example-golang-projects/clean-architecture/golibs/database/migration"
+	"github.com/example-golang-projects/clean-architecture/packages/database"
+	"github.com/example-golang-projects/clean-architecture/packages/database/migration"
 	"log"
 )
 
@@ -17,10 +17,6 @@ type MasterDependency struct {
 }
 
 func InitMasterDependency(cfg config.Config) MasterDependency {
-	// Init database
-	// ...
-	// Init client/third-party
-	// ...
 	connStr := fmt.Sprintf("dbname=%v user=%v password=%v host=%v port=%v sslmode=%v", cfg.Database.MasterDB.Database, cfg.Database.MasterDB.Username, cfg.Database.MasterDB.Password, cfg.Database.MasterDB.Host, cfg.Database.MasterDB.Port, cfg.Database.MasterDB.SSLMode)
 
 	db, err := database.NewDatabase(connStr)

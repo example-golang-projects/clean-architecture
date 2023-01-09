@@ -3,7 +3,7 @@ package middleware
 import (
 	"net/http"
 
-	httppkg "github.com/example-golang-projects/clean-architecture/golibs/http"
+	httppkg "github.com/example-golang-projects/clean-architecture/packages/http"
 )
 
 func APILoggingMiddleware(next http.Handler) http.Handler {

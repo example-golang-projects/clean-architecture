@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/example-golang-projects/clean-architecture/golibs/env"
+	"github.com/example-golang-projects/clean-architecture/packages/env"
 )
 
 type CommonConfig struct {

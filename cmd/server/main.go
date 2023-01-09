@@ -6,7 +6,7 @@ import (
 	masterCfg "github.com/example-golang-projects/clean-architecture/cmd/server/master/config"
 	"github.com/example-golang-projects/clean-architecture/cmd/server/user"
 	userCfg "github.com/example-golang-projects/clean-architecture/cmd/server/user/config"
-	"github.com/example-golang-projects/clean-architecture/golibs/config"
+	"github.com/example-golang-projects/clean-architecture/packages/config"
 	"github.com/spf13/cobra"
 	"os"
 )

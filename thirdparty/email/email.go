@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"net/smtp"
 
-	errorpkg "github.com/example-golang-projects/clean-architecture/golibs/error"
+	errorpkg "github.com/example-golang-projects/clean-architecture/packages/error"
 )
 
 type SMTPConfig struct {

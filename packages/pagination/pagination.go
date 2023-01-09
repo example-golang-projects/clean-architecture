@@ -3,7 +3,7 @@ package pagination
 import (
 	"errors"
 	"fmt"
-	arraycommom "github.com/example-golang-projects/clean-architecture/golibs/common/cm_array"
+	arraycommom "github.com/example-golang-projects/clean-architecture/packages/common/cm_array"
 	"reflect"
 	"strings"
 )
