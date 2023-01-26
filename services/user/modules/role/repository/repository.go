@@ -2,16 +2,16 @@ package repository
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	"github.com/example-golang-projects/clean-architecture/services/user/entities"
+	"github.com/jackc/pgx/v5"
 )
 
 type RoleRepository struct {
-	db *sql.DB
+	db *pgx.Conn
 }
 
-func NewRoleRepository(db *sql.DB) *RoleRepository {
+func NewRoleRepository(db *pgx.Conn) *RoleRepository {
 	return &RoleRepository{
 		db: db,
 	}

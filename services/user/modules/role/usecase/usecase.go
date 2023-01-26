@@ -2,9 +2,9 @@ package usecase
 
 import (
 	"context"
-	"database/sql"
 	"github.com/example-golang-projects/clean-architecture/services/user/entities"
 	"github.com/example-golang-projects/clean-architecture/services/user/modules/role/repository"
+	"github.com/jackc/pgx/v5"
 )
 
 type RoleRepoForRoleUseCase interface {
@@ -12,11 +12,11 @@ type RoleRepoForRoleUseCase interface {
 }
 
 type RoleUseCase struct {
-	db          *sql.DB
+	db          *pgx.Conn
 	roleUseCase RoleRepoForRoleUseCase
 }
 
-func NewRoleUseCase(db *sql.DB) RoleUseCase {
+func NewRoleUseCase(db *pgx.Conn) RoleUseCase {
 	return RoleUseCase{
 		db:          db,
 		roleUseCase: repository.NewRoleRepository(db),

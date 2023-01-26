@@ -1,9 +1,10 @@
 package migration
 
 import (
-	"database/sql"
+	"context"
 	"errors"
 	"fmt"
+	"github.com/jackc/pgx/v5"
 	_ "github.com/lib/pq"
 	"io/fs"
 	"os"
@@ -43,17 +44,17 @@ func (ms Migrations) Swap(i, j int) {
 }
 
 type Migrator struct {
-	db         *sql.DB
+	db         *pgx.Conn
 	Migrations map[string]*Migration
 }
 
-func NewMigrator(db *sql.DB) *Migrator {
+func NewMigrator(db *pgx.Conn) *Migrator {
 	return &Migrator{
 		db: db,
 	}
 }
 
-func (m *Migrator) initSchemaMigration() error {
+func (m *Migrator) initSchemaMigration(ctx context.Context) error {
 	query := fmt.Sprintf(`
 		CREATE TABLE IF NOT EXISTS %s (
 					id serial NOT NULL,
@@ -65,26 +66,26 @@ func (m *Migrator) initSchemaMigration() error {
 		);
 
 `, schema_migration)
-	_, err := m.db.Exec(query)
+	_, err := m.db.Exec(ctx, query)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (m *Migrator) insertVersion(tx *sql.Tx, version int, serviceName string) error {
+func (m *Migrator) insertVersion(ctx context.Context, tx pgx.Tx, version int, serviceName string) error {
 	query := fmt.Sprintf(`
 		insert into %s (version,service) 
 		values (%d,'%v');
 	`, schema_migration, version, serviceName)
-	_, err := tx.Exec(query)
+	_, err := tx.Exec(ctx, query)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (m *Migrator) getLatestVersionByServiceName(service string) (int, error) {
+func (m *Migrator) getLatestVersionByServiceName(ctx context.Context, service string) (int, error) {
 	currentVersion := 0
 	query := fmt.Sprintf(`
 		SELECT sm.version 
@@ -93,21 +94,21 @@ func (m *Migrator) getLatestVersionByServiceName(service string) (int, error) {
 		ORDER BY sm.id DESC 
 		LIMIT 1;
 	`, schema_migration, service)
-	err := m.db.QueryRow(query).Scan(&currentVersion)
+	err := m.db.QueryRow(ctx, query).Scan(&currentVersion)
 	if err != nil {
 		return 0, err
 	}
 	return currentVersion, nil
 }
 
-func Up(db *sql.DB, dir, serviceName string) (err error) {
+func Up(ctx context.Context, db *pgx.Conn, dir, serviceName string) (err error) {
 	m := NewMigrator(db)
-	if err = m.initSchemaMigration(); err != nil {
+	if err = m.initSchemaMigration(ctx); err != nil {
 		return err
 	}
 
-	latestVersion, err := m.getLatestVersionByServiceName(serviceName)
-	if err != nil && !strings.Contains(err.Error(), sql.ErrNoRows.Error()) {
+	latestVersion, err := m.getLatestVersionByServiceName(ctx, serviceName)
+	if err != nil && !strings.Contains(err.Error(), pgx.ErrNoRows.Error()) {
 		return err
 	}
 
@@ -115,25 +116,28 @@ func Up(db *sql.DB, dir, serviceName string) (err error) {
 	if err != nil {
 		return err
 	}
-	fmt.Println(migrations)
-	tx, err := m.db.Begin()
+	tx, err := m.db.Begin(ctx)
 	if err != nil {
 		return err
 	}
 	for _, migration := range migrations {
-		_, err = tx.Exec(migration.SqlQuery)
+		_, err = tx.Exec(ctx, migration.SqlQuery)
 		if err != nil {
-			tx.Rollback()
+			tx.Rollback(ctx)
 			return errors.New(fmt.Sprintf("error when execute migration file %s: %v", migration.MigrationPath, err.Error()))
 		}
-		err = m.insertVersion(tx, migration.Version, serviceName)
+		err = m.insertVersion(ctx, tx, migration.Version, serviceName)
 		if err != nil {
-			tx.Rollback()
+			tx.Rollback(ctx)
 			return errors.New(fmt.Sprintf("error when insert version of migration file %s: %v", migration.MigrationPath, err.Error()))
 		}
 		migration.Noti()
+		latestVersion = migration.Version
 	}
-	tx.Commit()
+	err = tx.Commit(ctx)
+	if err == nil {
+		fmt.Println(fmt.Sprintf("%s Currently migration version: %d", time.Now().Format("2006-01-02 03:04:05"), latestVersion))
+	}
 	return nil
 }
 
